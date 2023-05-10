@@ -8,9 +8,11 @@ export default async function handler(req, res) {
         clientSecret:"d3ba863d303c401c84b3e8dca435704b"
       })
     
+      console.log(body.code)
       SpotifyApi.authorizationCodeGrant(body.code).then(e=>{
-
           
+          
+          console.log(e.body.access_token)
           res.status(200).json({AccessToken:e.body.access_token,RefreshToken:e.body.refresh_token,exp:e.body.expires_in})
           SpotifyApi.setAccessToken(e.body.access_token)
         })

@@ -18,7 +18,6 @@ export default function Home() {
   const [photo,setPhoto] = useState(undefined)
   const code = Router.asPath.split("?").toString().split("=")[1]
 
-  console.log(code)
 
 
 
