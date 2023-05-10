@@ -15,7 +15,7 @@ export default function Player({photoUrl,isPaused}) {
       </div>
       <div id="timer" className='mt-56 flex gap-56 absolute'>
         <p id="currtime"></p>
-        <p id="duration">zxcv</p>
+        <p id="duration"></p>
       </div>
         {/* <input id="seekbar" type="range" className='h-1' min={0} max={100} /> */}
       <div className="controls bottom-6 ml-2 absolute flex gap-7">
