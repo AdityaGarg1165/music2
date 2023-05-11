@@ -22,40 +22,48 @@ export default function Home() {
 
 
   
-  useEffect(()=>{
+  // useEffect(()=>{
 
-    async function token_refresh(){
+  //   async function token_refresh(){
     
       
       
-      const res = await fetch("/api/refresh",{
-        method:"POST",
-        body:JSON.stringify({token:refreshToken})
-      }
-      )
-      await res.json().then(e=>{
-        setExpiresIn(e.exp)
-        setAccessToken(e.AccessToken)
-      })
-    }
-    token_refresh()
+  //     const res = await fetch("/api/refresh",{
+  //       method:"POST",
+  //       body:JSON.stringify({token:refreshToken})
+  //     }
+  //     )
+  //     await res.json().then(e=>{
+  //       setExpiresIn(e.exp)
+  //       setAccessToken(e.AccessToken)
+  //     })
+  //   }
+  //   token_refresh()
     
-  },[refreshToken,expiresIn])
+  // },[refreshToken,expiresIn])
   useEffect(()=>{
     async function token_(){
       
 
       
       
-      const res = await fetch("/api/fetch",{
+      // const res = await fetch("/api/fetch",{
+      //   method:"POST",
+      //   body:JSON.stringify({code:code})
+      // }
+      const res = await fetch("https://accounts.spotify.com/api/token",{
         method:"POST",
-        body:JSON.stringify({code:code})
+        headers:{
+          "Content-type":"application/x-www-form-urlencoded",
+          "Authorization":"Basic " +  btoa("2d619d57084f437aa49f91cf7197f671:d3ba863d303c401c84b3e8dca435704b")
+        },
+        body:"grant_type=client_credentials"
       }
       )
       await res.json().then(e=>{
-        setRefreshToken(e.RefreshToken)
-        setExpiresIn(e.exp)
-        setAccessToken(e.AccessToken)
+        // setRefreshToken(e.RefreshToken)
+        // setExpiresIn(e.exp)
+        setAccessToken(e.access_token)
       })
     }
     token_()

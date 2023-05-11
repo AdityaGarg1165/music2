@@ -1,23 +1,157 @@
-import { useRouter } from "next/router"
-import {BsSpotify} from 'react-icons/bs'
-import Link from "next/link"
+
+import { Input } from '@chakra-ui/react'
+
+const SpotifyWebApi = require('spotify-web-api-node')
+
+import Script  from 'next/script'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import Player from './components/Player'
 
 export default function Home() {
+  const [songs,setSongs] = useState()
+  const Router = useRouter()
+  const [refreshToken,setRefreshToken] = useState()
+  const [accessToken,setAccessToken] = useState()
+  const [expiresIn,setExpiresIn] = useState()
+  const [photo,setPhoto] = useState(undefined)
+  const code = Router.asPath.split("?").toString().split("=")[1]
 
-      const Router = useRouter()
+
+
+
+  
+  // useEffect(()=>{
+
+  //   async function token_refresh(){
+    
+      
+      
+  //     const res = await fetch("/api/refresh",{
+  //       method:"POST",
+  //       body:JSON.stringify({token:refreshToken})
+  //     }
+  //     )
+  //     await res.json().then(e=>{
+  //       setExpiresIn(e.exp)
+  //       setAccessToken(e.AccessToken)
+  //     })
+  //   }
+  //   token_refresh()
+    
+  // },[refreshToken,expiresIn])
+  useEffect(()=>{
+    async function token_(){
+      
+
+      
+      
+      // const res = await fetch("/api/fetch",{
+      //   method:"POST",
+      //   body:JSON.stringify({code:code})
+      // }
+      const res = await fetch("https://accounts.spotify.com/api/token",{
+        method:"POST",
+        headers:{
+          "Content-type":"application/x-www-form-urlencoded",
+          "Authorization":"Basic " +  btoa("2d619d57084f437aa49f91cf7197f671:d3ba863d303c401c84b3e8dca435704b")
+        },
+        body:"grant_type=client_credentials"
+      }
+      )
+      await res.json().then(e=>{
+        // setRefreshToken(e.RefreshToken)
+        // setExpiresIn(e.exp)
+        setAccessToken(e.access_token)
+      })
+    }
+    token_()
+    
+  },[code])  
+
+  
+  async function search(e){
+    const SpotifyApi = new SpotifyWebApi({
+      clientId:"2d619d57084f437aa49f91cf7197f671",
+    })
+    SpotifyApi.setAccessToken(accessToken)
+    if(e.target.value && e.target.value != "" && e.target.value != " "){
+
+      SpotifyApi.searchTracks(e.target.value,{limit:3}).then(d=>{
+        setSongs(d.body.tracks.items)
+      })
+    }
+    else{
+      setSongs(undefined)
+    }
+    
+    // const res = await fetch("/api/data",{
+      //   method:"POST",
+      //   body:JSON.stringify({token:accessToken})
+      // }
+      // )
+      // await res.json().then(e=>{
+        //   // console.log(e)
+        // })
+        
+      }
+      
+      
+      
       
       
       
       return (
-    // <div style={{background:"#121212"}} className='w-screen h-screen'>
-     <div className="flex flex-col justify-center align-middle items-center">
-        <button className="bg-green-500 rounded-md p-2 mt-28" onClick={()=>{window.location.href = "https://accounts.spotify.com/authorize?client_id=2d619d57084f437aa49f91cf7197f671&response_type=code&redirect_uri=https://music2-two.vercel.app/dashboard&scope=ugc-image-upload%20user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing%20streaming%20app-remote-control%20user-read-email%20user-read-private%20playlist-read-collaborative%20playlist-modify-public%20playlist-read-private%20playlist-modify-private%20user-library-modify%20user-library-read%20user-top-read%20user-read-playback-position%20user-read-recently-played%20user-follow-read%20user-follow-modify"}}>
-          <div className="flex gap-4 ">
-            <BsSpotify color="white" size={30}/>
-            <h1 className=" text-xl font-bold font-sans text-white">Login With Spotify</h1>
+        
+        <div className='flex flex-col justify-center items-center'>
+          <Script src='/front.js'></Script>
+          <audio id="play"></audio>
+
+
+         <Input id="search" onChange={search} width={"auto"} className={"mt-12"} placeholder='Search' size='lg' />
+         {songs && songs.map((data,i)=>(
+           <div onClick={async ()=>{
+             const res = await fetch("/api/get",{
+               method:"POST",
+               body:JSON.stringify({val:data.name})
+              }
+              )
+              setPhoto(data.album.images[0].url)
+              await res.json().then(async e=>{
+                const res = await fetch("/api/link",{
+                  method:"POST",
+                  body:JSON.stringify({val:JSON.parse(e).url})
+                }
+                )
+                await res.json().then(async e=>{
+                  const audio =  document.getElementById("play") 
+                  const searchBar =  document.getElementById("search") 
+                  audio.src = e.url
+                  audio.play()
+                  // searchBar.value = ""
+                  // setSongs(undefined)
+                  
+                  
+                  
+                })
+                
+                
+              })
+              
+              
+              
+            }} className='border cursor-pointer bortder-2 p-2 rounded-md' key={i}>
+              <div className='flex gap-6'>
+
+                  <img className='rounded-md' src={data.album.images[0].url} alt="" width="40" />
+                  <p p>{data.name}</p>
+              </div>
+
           </div>
-        </button>
-     </div>
-    // </div>
+         ))}
+         <Player photoUrl={photo} />
+     
+    </div>
   )
 }
