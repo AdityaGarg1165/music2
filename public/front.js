@@ -5,7 +5,7 @@ const seekdiv = document.getElementById("seek")
 const AudioElem = document.getElementById("play")
 const pause = document.getElementById("pause")
 const play = document.getElementById("playb")
-const image = document.getElementById("image")
+
 
 
 let isPlaying = true
@@ -47,6 +47,13 @@ AudioElem.addEventListener("timeupdate",()=>{
     const dur_sec = AudioElem.duration % 60
     const cur_sec = AudioElem.currentTime % 60
     const cur_min = AudioElem.currentTime / 60
+    if(AudioElem.duration === AudioElem.currentTime){
+        const image = document.getElementById("image")
+        image.style.animationPlayState = "paused"
+        play.classList.add("hidden")
+        pause.classList.remove("hidden")
+    }
+
     if(parseInt(cur_sec).toString().length === 1){
 
         currtime.innerText = `${parseInt(cur_min)}:0${parseInt(cur_sec)}`
