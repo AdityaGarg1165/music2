@@ -106,22 +106,27 @@ export default function Home() {
         
         <div className='flex flex-col justify-center items-center'>
           <Script src='/front.js'></Script>
-          <audio id="play"></audio>
+          <audio id="play" type='audio/webm'></audio>
 
 
          <Input id="search" onChange={search} width={"auto"} className={"mt-12"} placeholder='Search' size='lg' />
          {songs && songs.map((data,i)=>(
            <div onClick={async ()=>{
+            const seek = document.getElementById("seekbar")
+            const AudioElem = document.getElementById("play")
+            AudioElem.src = ""
+            seek.style.width = "0%"
+            const artist = data.artists[0].name
              const res = await fetch("/api/get",{
                method:"POST",
-               body:JSON.stringify({val:data.name})
+               body:JSON.stringify({val:data.name + artist})
               }
               )
               setPhoto(data.album.images[0].url)
               await res.json().then(async e=>{
                 const res = await fetch("/api/link",{
                   method:"POST",
-                  body:JSON.stringify({val:JSON.parse(e).url})
+                  body:JSON.stringify({val:e.url})
                 }
                 )
                 await res.json().then(async e=>{

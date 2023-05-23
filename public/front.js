@@ -52,22 +52,28 @@ AudioElem.addEventListener("timeupdate",()=>{
         image.style.animationPlayState = "paused"
         play.classList.add("hidden")
         pause.classList.remove("hidden")
+
+
+
     }
 
-    if(parseInt(cur_sec).toString().length === 1){
-
-        currtime.innerText = `${parseInt(cur_min)}:0${parseInt(cur_sec)}`
+    if(dur_sec !== NaN){
+        
+        if(parseInt(cur_sec).toString().length === 1){
+            
+            currtime.innerText = `${parseInt(cur_min)}:0${parseInt(cur_sec)}`
     }
     else{
         currtime.innerText = `${parseInt(cur_min)}:${parseInt(cur_sec)}`
     }
     if(parseInt(dur_sec).toString().length === 1){
-
+        
         dur.innerText = `${parseInt(dur_min)}:0${parseInt(dur_sec)}`
         // currtime.innerText = `${parseInt(cur_min)}:0${parseInt(cur_sec)}`
     }
     else{
         dur.innerText = `${parseInt(dur_min)}:${parseInt(dur_sec)}`
     }
-
+    
+}
 })
