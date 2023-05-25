@@ -119,7 +119,7 @@ export default function Home() {
             const artist = data.artists[0].name
              const res = await fetch("/api/get",{
                method:"POST",
-               body:JSON.stringify({val:data.name + artist})
+               body:JSON.stringify({val:data.name + " " + artist})
               }
               )
               setPhoto(data.album.images[0].url)
