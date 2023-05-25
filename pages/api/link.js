@@ -1,35 +1,17 @@
 
 // const Youtube = require('youtube-node')
 import * as fs from 'fs'
+
 const ytdl = require('ytdl-core')
-import { YouTube } from 'nodetube'
-const { youtube } = require("ytdownloader-fts");
-// const youtubedl = require('youtube-dl-exec')
-const youtubedl = require('@distube/youtube-dl')
+
 
 export default async function handler(req, res) {
-    const body = JSON.parse(req.body)
+  const body = JSON.parse(req.body)
+  const info = await ytdl.getInfo(body.val)
+    const vid = await ytdl.chooseFormat(info.formats,{quality:"highestaudio"})
 
-    youtubedl(body.val, {
-  dumpSingleJson: true,
-  noWarnings: true,
-  noCallHome: true,
-  noCheckCertificate: true,
-  preferFreeFormats: true,
-  youtubeSkipDashManifest: true,
-//   referer: 'https://example.com'
-})
-  .then(output => res.status(200).json({url:output['requested_formats'][1]['url']}))
-
-
-    
-
-
-
-    // })
-
-    // const srch = await yt.search('no reason')
-
+  res.status(200).json({url:vid.url})
+// })
 
 }
   
