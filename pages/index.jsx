@@ -106,7 +106,7 @@ export default function Home() {
         
         <div className='flex flex-col justify-center items-center'>
           <Script src='/front.js'></Script>
-          <audio id="play" type='audio/webm'></audio>
+          <audio id="play" type='video/mp4; codecs="avc1.42001E, mp4a.40.2'></audio>
 
 
          <Input id="search" onChange={search} width={"auto"} className={"mt-12"} placeholder='Search' size='lg' />
